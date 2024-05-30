@@ -1,0 +1,87 @@
+package miniProject;
+
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserDAO {
+	Connection conn = null; //DB 연결 담당 객체
+	PreparedStatement pstmt; //sql문장담기위한
+	final String JDBC_DRIVER = "org.h2.Driver";
+	final String JDBC_URL = "jdbc:h2:tcp://localhost/~/jwbookdb";
+	
+	public void open() {
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(JDBC_URL,"jwbook","1234");
+			System.out.println("DB Connection is established!!");
+		}catch(Exception e) {//ClassNotFonundException, SQL Exception처리
+			e.printStackTrace();
+		}
+	}
+	public void close() {
+		try {
+			pstmt.close();
+			conn.close();
+			System.out.println("DB Connection is Closed!!");
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void join(User s) {
+		open();
+		String sql = "INSERT INTO user(id, password, name, g1Result, g2Result, g3Result) values(?,?,?,?,?,?)";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, s.getId());
+			pstmt.setString(2, s.getPassword());
+			pstmt.setString(3, s.getName());
+			pstmt.setInt(4, s.getG1Result());
+			pstmt.setInt(5, s.getG2Result());
+			pstmt.setInt(6, s.getG3Result());
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+	}
+	
+	public User getAll(){
+		open();
+		User user = new User();
+		
+		try {
+			String sql = "select * from user where "
+			pstmt = conn.prepareStatement("select * from student");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Student s = new Student();
+				s.setId(rs.getInt("id"));
+				s.setUsername(rs.getString("username"));
+				s.setUniv(rs.getString("univ"));
+				s.setBirth(rs.getDate("birth"));
+				s.setEmail(rs.getString("email"));
+		
+				students.add(s);
+			}
+		}catch (Exception e) { e.printStackTrace();/*System.out.print("nononononnon\n\n\n\n\nnonnononn");*/ }
+		finally {close();}
+		return students;
+	}
+	public void delete(int id) throws SQLException{
+		open();
+		String sql = "DELETE FROM student where id=?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1,id);
+		if(pstmt.executeUpdate()==0) {
+			throw new SQLException("DB에러");
+		}
+		close();
+	}
+}

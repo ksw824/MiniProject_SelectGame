@@ -1,0 +1,27 @@
+package miniProject;
+
+import java.util.Random;
+
+public class Game {
+    private String[] choices = {"가위", "바위", "보"};
+    private String computerChoice;
+
+    public String play(String playerChoice) {
+        Random random = new Random();
+        computerChoice = choices[random.nextInt(choices.length)];
+
+        if (computerChoice.equals(playerChoice)) {
+            return "비겼습니다.";
+        } else if (("가위".equals(computerChoice) && "보".equals(playerChoice)) ||
+                   ("바위".equals(computerChoice) && "가위".equals(playerChoice)) ||
+                   ("보".equals(computerChoice) && "바위".equals(playerChoice))) {
+            return "당신이 졌습니다.";
+        } else {
+            return "당신이 이겼습니다.";
+        }
+    }
+
+    public String getComputerChoice() {
+        return computerChoice;
+    }
+}

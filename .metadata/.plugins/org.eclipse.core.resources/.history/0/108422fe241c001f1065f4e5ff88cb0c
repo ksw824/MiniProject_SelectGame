@@ -1,0 +1,103 @@
+package miniProject;
+
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import ch09_2.Student;
+
+public class UserDAO {
+	Connection conn = null; //DB 연결 담당 객체
+	PreparedStatement pstmt; //sql문장담기위한
+	final String JDBC_DRIVER = "org.h2.Driver";
+	final String JDBC_URL = "jdbc:h2:tcp://localhost/~/jwbookdb";
+	
+	public void open() {
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(JDBC_URL,"jwbook","1234");
+			System.out.println("DB Connection is established!!");
+		}catch(Exception e) {//ClassNotFonundException, SQL Exception처리
+			e.printStackTrace();
+		}
+	}
+	public void close() {
+		try {
+			pstmt.close();
+			conn.close();
+			System.out.println("DB Connection is Closed!!");
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void join(User s) {
+		open();
+		String sql = "INSERT INTO gameuser(id, password, name, g1Result, g2Result, g3Result) values(?,?,?,?,?,?)";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, s.getId());
+			pstmt.setString(2, s.getPassword());
+			pstmt.setString(3, s.getName());
+			pstmt.setInt(4, s.getG1Result());
+			pstmt.setInt(5, s.getG2Result());
+			pstmt.setInt(6, s.getG3Result());
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+	}
+	public boolean checkID(String id) throws SQLException {
+		open();
+		String sql = "select id from gameuser where id = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, id);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                // ID가 존재하는 경우
+                System.out.println("ID " +id+ " exists.");
+                return true;
+            } else {
+                // ID가 존재하지 않는 경우
+                System.out.println("ID " + id + " does not exist.");
+                return false;
+            }
+        }
+     catch (SQLException e) {
+        e.printStackTrace();
+    	return false;
+    }    
+}
+		
+	
+	
+	public List<User> getAll(){
+		open();
+		List<User> users = new ArrayList<>();
+		
+		try {
+			pstmt = conn.prepareStatement("select * from gameuser");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				User s = new User();
+				s.setId(rs.getString("id"));
+				s.setPassword(rs.getString("password"));
+				s.setName(rs.getString("name"));
+				s.setG1Result(rs.getInt("g1Result"));
+				s.setG2Result(rs.getInt("g2Result"));
+				s.setG3Result(rs.getInt("g3Result"));
+		
+				users.add(s);
+			}
+		}catch (Exception e) { e.printStackTrace();/*System.out.print("nononononnon\n\n\n\n\nnonnononn");*/ }
+		finally {close();}
+		return users;
+	}
+
+}
