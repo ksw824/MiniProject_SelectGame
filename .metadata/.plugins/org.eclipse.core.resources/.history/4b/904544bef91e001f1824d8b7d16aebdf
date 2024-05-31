@@ -1,0 +1,52 @@
+package miniProject_GameEx;
+
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+public class NumberGuessServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 요청과 응답 인코딩 설정
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        
+        HttpSession session = request.getSession();
+        
+        // 게임 상태 초기화
+        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        
+        if (targetNumber == null || attempts == null) {
+            targetNumber = (int) (Math.random() * 100) + 1;
+            attempts = 0;
+            session.setAttribute("targetNumber", targetNumber);
+            session.setAttribute("attempts", attempts);
+        }
+
+        // 사용자의 추측 처리
+        String guessParam = request.getParameter("guess");
+        String message = "";
+        String messageClass = "";
+        
+        if (guessParam != null) {
+            int userGuess = Integer.parseInt(guessParam);
+            attempts++;
+
+            if (userGuess < targetNumber) {
+                message = "더 높음";
+                messageClass = "high";
+            } else if (userGuess > targetNumber) {
+                message = "더 낮음";
+                messageClass = "low";
+            } else {
+                message = "정답! 시도 횟수: " + attempts;
+                messageClass

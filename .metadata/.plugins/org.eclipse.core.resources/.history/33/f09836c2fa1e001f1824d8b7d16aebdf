@@ -1,0 +1,197 @@
+<%-- <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .high {
+            background-color: #ffeb3b;
+            color: #000;
+        }
+        .low {
+            background-color: #03a9f4;
+            color: #fff;
+        }
+        .correct {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>숫자 맞추기 게임</h1>
+        <form method="post" action="/jwbook/numberGuess">
+            <input type="number" name="guess" placeholder="1에서 100까지" required>
+            <input type="submit" value="추측">
+        </form>
+        <div class="message <%= request.getAttribute("messageClass") %>">
+            <%= request.getAttribute("message") %>
+        </div>
+    </div>
+</body>
+</html>
+ --%>
+ 
+ 
+ <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .high {
+            background-color: #ffeb3b;
+            color: #000;
+        }
+        .low {
+            background-color: #03a9f4;
+            color: #fff;
+        }
+        .correct {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .timer {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #e74c3c;
+        }
+    </style>
+    <script>
+        let timeLeft = 60;  // 제한 시간 60초
+        const timerElement = document.getElementById('timer');
+        
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                alert("시간 초과! 게임 오버!");
+                document.getElementById("timeoutForm").submit();
+            } else {
+                timerElement.innerHTML = timeLeft + "초 남음";
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        window.onload = function() {
+            setTimeout(updateTimer, 1000);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>숫자 맞추기 게임</h1>
+        <form method="post" action="/jwbook/numberGuess">
+            <input type="number" name="guess" placeholder="1에서 100까지" required>
+            <input type="submit" value="추측">
+        </form>
+        <form id="timeoutForm" method="post" action="NumberGuessServlet">
+            <input type="hidden" name="timeout" value="true">
+        </form>
+        <div class="message <%= request.getAttribute("messageClass") %>">
+            <%= request.getAttribute("message") %>
+        </div>
+        <div id="timer" class="timer">60초 남음</div>
+        <div>점수: <%= session.getAttribute("score") %></div>
+    </div>
+</body>
+</html>
+ 

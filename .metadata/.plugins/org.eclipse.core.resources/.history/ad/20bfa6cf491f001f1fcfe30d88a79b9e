@@ -1,0 +1,236 @@
+////package miniProject_GameEx;
+////
+////import java.io.IOException;
+////import jakarta.servlet.ServletException;
+////import jakarta.servlet.http.HttpServlet;
+////import jakarta.servlet.http.HttpServletRequest;
+////import jakarta.servlet.http.HttpServletResponse;
+////import jakarta.servlet.http.HttpSession;
+////
+////public class NumberGuessServlet extends HttpServlet {
+////    private static final long serialVersionUID = 1L;
+////    
+////    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+////        doPost(request, response);
+////    }
+////
+////    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+////        // 요청과 응답 인코딩 설정
+////        request.setCharacterEncoding("UTF-8");
+////        response.setContentType("text/html; charset=UTF-8");
+////        
+////        HttpSession session = request.getSession();
+////        
+////        // 게임 상태 초기화
+////        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+////        Integer attempts = (Integer) session.getAttribute("attempts");
+////        
+////        if (targetNumber == null || attempts == null) {
+////            targetNumber = (int) (Math.random() * 100) + 1;
+////            attempts = 0;
+////            session.setAttribute("targetNumber", targetNumber);
+////            session.setAttribute("attempts", attempts);
+////        }
+////
+////        // 사용자의 추측 처리
+////        String guessParam = request.getParameter("guess");
+////        String message = "";
+////        String messageClass = "";
+////        
+////        if (guessParam != null) {
+////            int userGuess = Integer.parseInt(guessParam);
+////            attempts++;
+////
+////            if (userGuess < targetNumber) {
+////                message = "더 높음";
+////                messageClass = "high";
+////            } else if (userGuess > targetNumber) {
+////                message = "더 낮음";
+////                messageClass = "low";
+////            } else {
+////                message = "정답! 시도 횟수: " + attempts;
+////                messageClass = "correct";
+////                // 게임 상태 리셋
+////                session.removeAttribute("targetNumber");
+////                session.removeAttribute("attempts");
+////            }
+////            
+////            session.setAttribute("attempts", attempts);
+////        }
+////
+////        // 결과 메시지 설정
+////        request.setAttribute("message", message);
+////        request.setAttribute("messageClass", messageClass);
+////        request.getRequestDispatcher("miniProject_GameEx/numberGuess.jsp").forward(request, response);
+////    }
+////}
+////
+////
+//
+//package miniProject_GameEx;
+//
+//import java.io.IOException;
+//import jakarta.servlet.ServletException;
+//import jakarta.servlet.http.HttpServlet;
+//import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletResponse;
+//import jakarta.servlet.http.HttpSession;
+//
+//public class NumberGuessServlet extends HttpServlet {
+//    private static final long serialVersionUID = 1L;
+//    
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        doPost(request, response);
+//    }
+//
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        request.setCharacterEncoding("UTF-8");
+//        response.setContentType("text/html; charset=UTF-8");
+//        
+//        HttpSession session = request.getSession();
+//        
+//        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+//        Integer attempts = (Integer) session.getAttribute("attempts");
+//        Integer score = (Integer) session.getAttribute("score");
+//        String difficulty = (String) session.getAttribute("difficulty");
+//
+//        // 난이도 설정
+//        if (difficulty == null) {
+//            difficulty = request.getParameter("difficulty");
+//            session.setAttribute("difficulty", difficulty);
+//        }
+//
+//        int maxNumber = 100;
+//        if ("easy".equals(difficulty)) {
+//            maxNumber = 50;
+//        } else if ("medium".equals(difficulty)) {
+//            maxNumber = 100;
+//        } else if ("hard".equals(difficulty)) {
+//            maxNumber = 200;
+//        }
+//
+//        if (targetNumber == null || attempts == null || score == null) {
+//            targetNumber = (int) (Math.random() * maxNumber) + 1;
+//            attempts = 0;
+//            score = 100;
+//            session.setAttribute("targetNumber", targetNumber);
+//            session.setAttribute("attempts", attempts);
+//            session.setAttribute("score", score);
+//        }
+//
+//
+//        String guessParam = request.getParameter("guess");
+//        String message = "";
+//        String messageClass = "";
+//        
+//        if (guessParam != null) {
+//            int userGuess = Integer.parseInt(guessParam);
+//            attempts++;
+//            score -= 10;  // 각 시도마다 점수 차감
+//
+//            if (userGuess < targetNumber) {
+//                message = "더 높음";
+//                messageClass = "high";
+//            } else if (userGuess > targetNumber) {
+//                message = "더 낮음";
+//                messageClass = "low";
+//            } else {
+//                message = "정답! 시도 횟수: " + attempts + ", 점수: " + score;
+//                messageClass = "correct";
+//                session.removeAttribute("targetNumber");
+//                session.removeAttribute("attempts");
+//                session.removeAttribute("score");
+//                session.removeAttribute("difficulty");
+//            }
+//            
+//            session.setAttribute("attempts", attempts);
+//            session.setAttribute("score", score);
+//        }
+//
+//        request.setAttribute("message", message);
+//        request.setAttribute("messageClass", messageClass);
+//        request.getRequestDispatcher("miniProject_GameEx/numberGuess.jsp").forward(request, response);
+//    }
+//}
+
+
+package miniProject_GameEx;
+
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+public class NumberGuessServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        
+        HttpSession session = request.getSession();
+        
+        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        Integer score = (Integer) session.getAttribute("score");
+
+        if (targetNumber == null || attempts == null || score == null) {
+            targetNumber = (int) (Math.random() * 100) + 1;
+            attempts = 0;
+            score = 100;
+            session.setAttribute("targetNumber", targetNumber);
+            session.setAttribute("attempts", attempts);
+            session.setAttribute("score", score);
+        }
+
+        String guessParam = request.getParameter("guess");
+        String message = "";
+        String hint = "";
+        String messageClass = "";
+        
+        if (guessParam != null) {
+            int userGuess = Integer.parseInt(guessParam);
+            attempts++;
+            score -= 10;  // 각 시도마다 점수 차감
+
+            int difference = Math.abs(userGuess - targetNumber);
+            if (difference >= 50) {
+                hint = "오늘 안에 맞추실 수 있겠어요?";
+            } else if (difference >= 30) {
+                hint = "아직 멀었어요~";
+            } else if (difference >= 10) {
+                hint = "거의 다 왔어요";
+            } else {
+                hint = "눈 앞이 고지에요!!";
+            }
+
+            if (userGuess < targetNumber) {
+                message = "UP";
+                messageClass = "high";
+            } else if (userGuess > targetNumber) {
+                message = "DOWN";
+                messageClass = "low";
+            } else {
+                message = "정답! 시도 횟수: " + attempts + ", 점수: " + score;
+                messageClass = "correct";
+                session.removeAttribute("targetNumber");
+                session.removeAttribute("attempts");
+                session.removeAttribute("score");
+            }
+            
+            session.setAttribute("attempts", attempts);
+            session.setAttribute("score", score);
+        }
+
+        request.setAttribute("message", message);
+        request.setAttribute("hint", hint);
+        request.setAttribute("messageClass", messageClass);
+        request.getRequestDispatcher("miniProject_GameEx/numberGuess.jsp").forward(request, response);
+    }
+}

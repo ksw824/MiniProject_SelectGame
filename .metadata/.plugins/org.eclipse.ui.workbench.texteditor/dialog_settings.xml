@@ -10,8 +10,11 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value=""/>
+		<item key="selection" value="in"/>
 		<list key="findhistory">
+			<item value="In"/>
+			<item value="log"/>
+			<item value="logged"/>
 			<item value="s.id"/>
 			<item value="print"/>
 			<item value="append"/>

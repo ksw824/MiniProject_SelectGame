@@ -99,4 +99,14 @@
     <servlet-name>GameController</servlet-name>
     <url-pattern>/gomokuControl</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NumberGuessServlet</display-name>
+    <servlet-name>NumberGuessServlet</servlet-name>
+    <servlet-class>miniProject_GameEx.NumberGuessServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NumberGuessServlet</servlet-name>
+    <url-pattern>/numberGuess</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>숫자 맞추기 게임</title>
+</head>
+<body>
+    <h1>숫자 맞추기 게임</h1>
+    <form action="/jwbook/numberGuess" method="post">
+        <label for="guess">숫자를 입력하세요 (1-100):</label>
+        <input type="number" id="guess" name="guess" min="1" max="100" required>
+        <input type="submit" value="제출">
+    </form>
+    <%
+        String message = (String) request.getAttribute("message");
+        if (message != null && !message.isEmpty()) {
+            out.println("<p>" + message + "</p>");
+        }
+    %>
+</body>
+</html>

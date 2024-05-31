@@ -1,0 +1,37 @@
+package miniProject_GameEx;
+import java.io.IOException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+
+public class NumberGuessServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        
+        if (targetNumber == null || attempts == null) {
+            targetNumber = (int) (Math.random() * 100) + 1;
+            attempts = 0;
+            session.setAttribute("targetNumber", targetNumber);
+            session.setAttribute("attempts", attempts);
+        }
+        
+        request.getRequestDispatcher("numberGuess.jsp").forward(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Integer targetNumber = (Integer) session.getAttribute("targetNumber");
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        attempts++;
+        
+        int userGuess = Integer.parseInt(request.getParameter("guess"));
+    }
+}
