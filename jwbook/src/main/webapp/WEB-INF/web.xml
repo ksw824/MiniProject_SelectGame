@@ -89,4 +89,14 @@
     <servlet-name>UserController</servlet-name>
     <url-pattern>/userControl</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GameController</display-name>
+    <servlet-name>GameController</servlet-name>
+    <servlet-class>miniProject.GameController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GameController</servlet-name>
+    <url-pattern>/gomokuControl</url-pattern>
+  </servlet-mapping>
 </web-app>
